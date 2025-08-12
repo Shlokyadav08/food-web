@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Signup.css";
+import burgerImage from "../assets/pizza.png"; 
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -19,7 +19,6 @@ export default function Signup() {
       return;
     }
 
-    // Optional: Pre-set role for known admins (backend still enforces roles)
     const role =
       ["shlok", "kunal"].includes(name.trim().toLowerCase()) ? "admin" : "user";
 
@@ -27,13 +26,13 @@ export default function Signup() {
     try {
       const res = await axios.post(
         `${API}/auth/signup`,
-         { 
-          username:name,
+        {
+          username: name,
           email: email,
           password: password,
-          role: role 
-        },      
-          { headers: { "Content-Type": "application/json" } }
+          role: role
+        },
+        { headers: { "Content-Type": "application/json" } }
       );
 
       if (res.status === 201 || res.status === 200) {
@@ -42,7 +41,6 @@ export default function Signup() {
       }
     } catch (err) {
       if (err.response) {
-        // FastAPI usually sends errors in `detail`
         alert(err.response.data?.detail || "Signup failed");
       } else if (err.request) {
         alert("No response from server. Please check your connection.");
@@ -55,51 +53,146 @@ export default function Signup() {
   };
 
   return (
-    <div className="signup-page">
-      <div className="container">
-        <div className="card">
-          <div className="card-header">
-            <h1>Sign Up</h1>
-            <p>Create your account</p>
-          </div>
-          <div className="card-body">
+    <div style={styles.pageWrapper}>
+      <div style={styles.authContainer}>
+        {/* Left Side */}
+        <div style={styles.authLeft}>
+          <div style={styles.authForm}>
+            <h2 style={styles.heading}>Sign Up</h2>
             <form onSubmit={handleSignup}>
-              <label>Name</label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 type="text"
-                placeholder="Full name"
+                placeholder="Full Name"
+                style={styles.input}
               />
-              <label>Email</label>
               <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
-                placeholder="example@gmail.com"
+                placeholder="E-mail"
+                style={styles.input}
               />
-              <label>Password</label>
               <input
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
-                placeholder="Enter password"
+                placeholder="Password"
+                style={styles.input}
               />
-              <div style={{ marginTop: 14 }}>
-                <button className="login-btn" type="submit" disabled={loading}>
-                  {loading ? "Please wait..." : "SIGN UP"}
-                </button>
-              </div>
-              <div style={{ marginTop: 12 }} className="small">
-                Already have an account?{" "}
-                <Link to="/login" className="text-orange">
-                  Log in
-                </Link>
-              </div>
+
+              <button type="submit" style={styles.authBtn} disabled={loading}>
+                {loading ? "Please wait..." : "Sign Up"}
+              </button>
             </form>
+
+            <p style={styles.authAlt}>
+              Already have an account?{" "}
+              <Link to="/login" style={styles.textOrange}>
+                Log in here
+              </Link>
+            </p>
           </div>
+        </div>
+
+        {/* Right Side */}
+        <div style={styles.authRight}>
+          <img
+            src={burgerImage}
+            alt="Burger Illustration"
+            style={styles.authImage}
+          />
         </div>
       </div>
     </div>
   );
 }
+
+const styles = {
+  pageWrapper: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100vh",
+    width: "100vw",
+    background: "linear-gradient(135deg, #ff4d00, #ff8a3d)",
+  },
+  authContainer: {
+    display: "flex",
+    width: "90%",
+    maxWidth: "900px",
+    height: "550px",
+    background: "#fff",
+    borderRadius: "16px",
+    overflow: "hidden",
+    boxShadow: "-1px -1px 30px #fbc17b",
+  },
+  authRight: {
+    flex: 1,
+    background: "linear-gradient(135deg, #ff4d00, #ff8a3d)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 12,
+    padding: "20px",
+  },
+  authImage: {
+    maxWidth: "150%",
+    marginRight: 60,
+    height: "auto",
+  },
+  authLeft: {
+    flex: 1,
+    background: "#fdf8f3",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "40px",
+  },
+  authForm: {
+    width: "100%",
+    maxWidth: "320px",
+  },
+  heading: {
+    textAlign: "center",
+    fontSize: "26px",
+    fontWeight: "600",
+    color: "#ff4d00",
+    marginBottom: "25px",
+  },
+  input: {
+    width: "100%",
+    padding: "12px",
+    marginBottom: "16px",
+    border: "1px solid #ddd",
+    borderRadius: "8px",
+    background: "#fff",
+    fontSize: "14px",
+    outline: "none",
+    transition: "0.3s",
+  },
+  authBtn: {
+    width: "100%",
+    padding: "12px",
+    background: "#ff4d00",
+    color: "white",
+    fontWeight: "bold",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "14px",
+    transition: "background 0.3s ease",
+  },
+  authAlt: {
+    textAlign: "center",
+    fontSize: "13px",
+    marginTop: "12px",
+    color: "#555",
+  },
+  textOrange: {
+    color: "#ff4d00",
+    textDecoration: "none",
+    fontWeight: "500",
+  },
+};

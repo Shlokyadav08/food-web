@@ -79,6 +79,7 @@ export default function Login() {
               />
 
 
+
               <button type="submit" style={styles.authBtn}>
                 {loading ? "Please wait..." : "Log in"}
               </button>
@@ -126,7 +127,8 @@ const styles = {
     padding: "20px",
   },
   authImage: {
-    maxWidth: "150%",
+    maxWidth: "120%",
+    marginLeft: 50,
     height: "auto",
   },
   authRight: {
