@@ -78,9 +78,6 @@ export default function Login() {
                 style={styles.input}
               />
 
-              <label style={styles.terms}>
-                <input type="checkbox" /> Remember me
-              </label>
 
               <button type="submit" style={styles.authBtn}>
                 {loading ? "Please wait..." : "Log in"}

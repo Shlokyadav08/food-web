@@ -27,11 +27,16 @@ export default function Signup() {
     try {
       const res = await axios.post(
         `${API}/auth/signup`,
-        { name, email, password, role },
-        { headers: { "Content-Type": "application/json" } }
+         { 
+          username:name,
+          email: email,
+          password: password,
+          role: role 
+        },      
+          { headers: { "Content-Type": "application/json" } }
       );
 
-      if (res.status === 201) {
+      if (res.status === 201 || res.status === 200) {
         alert(res.data?.message || "Signup successful! Please log in.");
         navigate("/login");
       }
