@@ -11,40 +11,48 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!email || !password) return alert("Please fill all fields");
+  e.preventDefault();
+  if (!email || !password) return alert("Please fill all fields");
 
-    setLoading(true);
-    try {
-      const res = await axios.post(
-        `${API}/auth/login`,
-        { email, password },
+  setLoading(true);
+  try {
+    // Step 1: Login request
+    const loginRes = await axios.post(
+      `${API}/auth/login`,
+      { email, password },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    if (loginRes.status === 200) {
+      const { id, access_token } = loginRes.data; // Make sure backend sends 'id' & 'access_token'
+
+      // Store ID immediately
+      localStorage.setItem("user_id", id);
+      localStorage.setItem("email", email);
+      if (access_token) localStorage.setItem("token", access_token);
+
+      // Step 2: Fetch user details by ID
+      const userRes = await axios.get(
+        `${API}/auth/users/${id}`,
         { headers: { "Content-Type": "application/json" } }
       );
 
-      if (res.status === 200) {
-        const { role = "user", user_id, access_token } = res.data;
+      const { role } = userRes.data;
+      localStorage.setItem("role", role);
 
-        // Store session data
-        localStorage.setItem("user_id", user_id);
-        localStorage.setItem("role", role);
-        localStorage.setItem("email", email);
-        if (access_token) {
-          localStorage.setItem("token", access_token); // JWT or session token
-        }
+      alert("Login successful");
 
-        alert("Login successful");
-
-        // Navigate based on role
-        if (role === "admin") navigate("/admin-dashboard");
-        else navigate("/dashboard");
-      }
-    } catch (err) {
-      alert(err?.response?.data?.detail || err?.message || "Login failed");
-    } finally {
-      setLoading(false);
+      // Step 3: Redirect based on role
+      if (role === "admin") navigate("/admin-dashboard");
+      else navigate("/dashboard");
     }
-  };
+  } catch (err) {
+    alert(err?.response?.data?.detail || err?.message || "Login failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div style={styles.pageWrapper}>
