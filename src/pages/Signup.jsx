@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import burgerImage from "../assets/pizza.png";
+import "@fontsource/poppins"; 
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ export default function Signup() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 type="text"
-                placeholder="Full Name"
+                placeholder="Name"
                 style={styles.input}
               />
               <input
@@ -119,6 +120,7 @@ export default function Signup() {
 
 const styles = {
   pageWrapper: {
+    fontFamily: "'Poppins', sans-serif",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import burgerImage from "../assets/burger.png"; 
+import "@fontsource/poppins"; 
 
 export default function Login() {
   const navigate = useNavigate();
@@ -116,6 +117,7 @@ export default function Login() {
 
 const styles = {
   pageWrapper: {
+    fontFamily: "'Poppins', sans-serif",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
