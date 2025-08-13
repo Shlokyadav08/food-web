@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import burgerImage from "../assets/pizza.png"; 
+import burgerImage from "../assets/pizza.png";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -10,17 +10,15 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user"); // default to "user"
   const [loading, setLoading] = useState(false);
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !role) {
       alert("Please fill all fields");
       return;
     }
-
-    const role =
-      ["shlok", "kunal"].includes(name.trim().toLowerCase()) ? "admin" : "user";
 
     setLoading(true);
     try {
@@ -30,7 +28,7 @@ export default function Signup() {
           username: name,
           email: email,
           password: password,
-          role: role
+          role: role,
         },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -81,6 +79,16 @@ export default function Signup() {
                 placeholder="Password"
                 style={styles.input}
               />
+
+              {/* Role Dropdown */}
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                style={styles.input}
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
 
               <button type="submit" style={styles.authBtn} disabled={loading}>
                 {loading ? "Please wait..." : "Sign Up"}

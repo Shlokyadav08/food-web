@@ -10,7 +10,7 @@ export default function AdminDashboard(){
   useEffect(()=>{
     const fetchUsers = async ()=>{
       try{
-        const res = await axios.get(`${API}/admin/users`, {
+        const res = await axios.get(`${API}/auth/all_users`, {
           headers: { "X-Admin-Email": adminEmail }
         });
         setUsers(res.data || res.data.users || res.data);

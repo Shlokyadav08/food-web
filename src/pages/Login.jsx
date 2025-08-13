@@ -12,39 +12,48 @@ export default function Login() {
 
   const handleLogin = async (e) => {
   e.preventDefault();
-  if (!email || !password) return alert("Please fill all fields");
+
+  if (!email || !password) {
+    alert("Please fill all fields");
+    return;
+  }
 
   setLoading(true);
+
   try {
-    // Step 1: Login request
+    // Step 1: Login
     const loginRes = await axios.post(
       `${API}/auth/login`,
       { email, password },
       { headers: { "Content-Type": "application/json" } }
     );
 
-    if (loginRes.status === 200) {
-      const { id, access_token } = loginRes.data; // Make sure backend sends 'id' & 'access_token'
+    console.log("Login Response:", loginRes.data);
 
-      // Store ID immediately
-      localStorage.setItem("user_id", id);
+    if (loginRes.status === 200 && loginRes.data.user_id) {
+      const userId = loginRes.data.user_id;
+      localStorage.setItem("user_id", userId);
       localStorage.setItem("email", email);
-      if (access_token) localStorage.setItem("token", access_token);
 
-      // Step 2: Fetch user details by ID
-      const userRes = await axios.get(
-        `${API}/auth/users/${id}`,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      // Step 2: Fetch user data
+      const userRes = await axios.get(`${API}/auth/users/${userId}`, {
+        headers: { "Content-Type": "application/json" }
+      });
 
-      const { role } = userRes.data;
+      console.log("User Data Response:", userRes.data);
+
+      const { role = "user" } = userRes.data;
+
       localStorage.setItem("role", role);
 
       alert("Login successful");
 
-      // Step 3: Redirect based on role
-      if (role === "admin") navigate("/admin-dashboard");
-      else navigate("/dashboard");
+      // Step 3: Navigate based on role
+      if (role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     }
   } catch (err) {
     alert(err?.response?.data?.detail || err?.message || "Login failed");
@@ -52,7 +61,6 @@ export default function Login() {
     setLoading(false);
   }
 };
-
 
   return (
     <div style={styles.pageWrapper}>
